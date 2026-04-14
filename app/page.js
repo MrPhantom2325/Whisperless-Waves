@@ -1,4 +1,4 @@
-import BlindCaptainGame from "@/BlindCaptain_Phase3";
+import BlindCaptainGame from "@/BlindCaptain_Phase4";
 
 export default function Home() {
   return <BlindCaptainGame />;
