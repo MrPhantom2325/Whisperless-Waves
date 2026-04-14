@@ -2200,7 +2200,7 @@ function IntroScreen({ onStart }) {
             textShadow: "0 0 40px rgba(200,150,30,0.4)",
           }}
         >
-          The Blind Captain
+          WHISPERLESS
         </h1>
         <h1
           style={{
@@ -2212,7 +2212,7 @@ function IntroScreen({ onStart }) {
             letterSpacing: 2,
           }}
         >
-          & The Mute Navigator
+          WAVES
         </h1>
         <p
           style={{
