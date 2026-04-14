@@ -357,8 +357,9 @@ const STAGES = [
   {
     id: 6,
     name: "The Blackout",
-    subtitle: "Both screens go dark. Your memory is the only map.",
-    objective: "Navigate from memory alone — the map vanishes in 10 seconds",
+    subtitle: "The Captain's chart dies. The Navigator must steer in faith.",
+    objective:
+      "After 10 seconds, only the Captain screen blacks out. Keep guiding by memory.",
     fogRadius: null,
     mapBlur: 0,
     controlLag: 0,
@@ -770,7 +771,8 @@ function StageIntroCard({ stage, onBegin }) {
         position: "absolute",
         inset: 0,
         zIndex: 50,
-        background: "rgba(8,6,3,0.94)",
+        background:
+          "radial-gradient(circle at top, rgba(28,38,56,0.96) 0%, rgba(17,14,11,0.96) 72%)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -791,9 +793,9 @@ function StageIntroCard({ stage, onBegin }) {
       <div style={{ textAlign: "center" }}>
         <div
           style={{
-            fontSize: 10,
+            fontSize: 13,
             letterSpacing: 5,
-            color: "#3A2E12",
+            color: "#D0D8E8",
             marginBottom: 12,
           }}
         >
@@ -801,8 +803,8 @@ function StageIntroCard({ stage, onBegin }) {
         </div>
         <div
           style={{
-            fontSize: 36,
-            color: "#C8961E",
+            fontSize: 42,
+            color: "#F2CF81",
             letterSpacing: 2,
             lineHeight: 1.2,
             marginBottom: 8,
@@ -813,8 +815,8 @@ function StageIntroCard({ stage, onBegin }) {
         </div>
         <div
           style={{
-            fontSize: 12,
-            color: "#5C4A1E",
+            fontSize: 16,
+            color: "#D5DCEC",
             letterSpacing: 1,
             marginBottom: 24,
             lineHeight: 1.6,
@@ -826,7 +828,9 @@ function StageIntroCard({ stage, onBegin }) {
           style={{
             border: "1px solid #2A2010",
             padding: "14px 24px",
-            maxWidth: 480,
+            width: "100%",
+            maxWidth: 560,
+            margin: "0 auto",
             textAlign: "left",
             display: "flex",
             flexDirection: "column",
@@ -835,35 +839,35 @@ function StageIntroCard({ stage, onBegin }) {
         >
           <div
             style={{
-              fontSize: 9,
+              fontSize: 12,
               letterSpacing: 3,
-              color: "#5C4A1E",
+              color: "#D0D8E8",
               marginBottom: 4,
             }}
           >
             BRIEFING
           </div>
-          <div style={{ fontSize: 11, color: "#3A2E12", lineHeight: 1.7 }}>
+          <div style={{ fontSize: 15, color: "#EFF2FA", lineHeight: 1.7 }}>
             {stage.objective}
           </div>
           {stage.stormActive && (
-            <div style={{ fontSize: 10, color: "#8B3A3A" }}>
+            <div style={{ fontSize: 13, color: "#FFB4B4" }}>
               ⚠ STORM ACTIVE — thunder, rain, blurred charts. Stay calm.
             </div>
           )}
           {stage.fogRadius && (
-            <div style={{ fontSize: 10, color: "#4A7FBB" }}>
+            <div style={{ fontSize: 13, color: "#A7D7FF" }}>
               ⚠ FOG — visibility limited to {stage.fogRadius} tiles around ship.
             </div>
           )}
           {stage.falseLandmarks && (
-            <div style={{ fontSize: 10, color: "#8B3A3A" }}>
+            <div style={{ fontSize: 13, color: "#FFB4B4" }}>
               ⚠ DECOYS — two islands mimic the destination. Only one is marked ✦
             </div>
           )}
           {stage.memoryMode && (
-            <div style={{ fontSize: 10, color: "#C8961E" }}>
-              ⚠ BLACKOUT — 10 seconds to memorise the map. Then darkness.
+            <div style={{ fontSize: 13, color: "#FFD686" }}>
+              ⚠ CAPTAIN BLACKOUT — chart disappears in 10 seconds. Navigator stays lit.
             </div>
           )}
         </div>
@@ -872,12 +876,12 @@ function StageIntroCard({ stage, onBegin }) {
       <button
         onClick={onBegin}
         style={{
-          padding: "12px 40px",
+          padding: "14px 44px",
           background: "transparent",
-          border: "1px solid #C8961E",
-          color: "#C8961E",
+          border: "2px solid #F2CF81",
+          color: "#F2CF81",
           fontFamily: "'Courier New', monospace",
-          fontSize: 11,
+          fontSize: 14,
           letterSpacing: 4,
           cursor: "pointer",
         }}
@@ -925,7 +929,7 @@ function CaptainPanel({
   captorPos,
   stage,
   mapData,
-  memoryHidden,
+  captainBlackout,
   memoryCountdown,
   shakeOffset,
 }) {
@@ -977,7 +981,7 @@ function CaptainPanel({
       <LightningFlash active={stage.stormActive} />
 
       {/* Memory overlay */}
-      {memoryHidden && (
+      {captainBlackout && (
         <div
           style={{
             position: "absolute",
@@ -1020,7 +1024,7 @@ function CaptainPanel({
       )}
 
       {/* Memory countdown banner */}
-      {stage.memoryMode && !memoryHidden && memoryCountdown > 0 && (
+      {stage.memoryMode && !captainBlackout && memoryCountdown > 0 && (
         <div
           style={{
             position: "absolute",
@@ -1320,7 +1324,6 @@ function NavigatorPanel({
   onSails,
   onAnchor,
   stageIndex,
-  memoryHidden,
   shakeOffset,
 }) {
   const [wobble, setWobble] = useState(0);
@@ -1365,64 +1368,6 @@ function NavigatorPanel({
 
       {/* Rain on navigator side too */}
       <RainCanvas active={stage.stormActive} intensity={0.7} />
-
-      {/* Memory overlay */}
-      {memoryHidden && (
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            zIndex: 20,
-            background: "#080603",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 12,
-          }}
-        >
-          <div
-            style={{
-              fontSize: 13,
-              color: "#3A2E12",
-              fontFamily: "'Courier New', monospace",
-              letterSpacing: 3,
-            }}
-          >
-            HELM ONLY
-          </div>
-          <div
-            style={{
-              fontSize: 10,
-              color: "#2A2010",
-              fontFamily: "'Courier New', monospace",
-              letterSpacing: 1,
-              textAlign: "center",
-              maxWidth: 200,
-              lineHeight: 1.8,
-            }}
-          >
-            Controls still active.
-            <br />
-            Listen to the Captain.
-          </div>
-          <div
-            style={{
-              marginTop: 16,
-              display: "flex",
-              flexDirection: "column",
-              gap: 8,
-              fontSize: 10,
-              color: "#3A2E12",
-              fontFamily: "'Courier New', monospace",
-            }}
-          >
-            <span>← → Steer</span>
-            <span>↑ ↓ Sails</span>
-            <span>Q Anchor</span>
-          </div>
-        </div>
-      )}
 
       {/* Header */}
       <div
@@ -2016,7 +1961,8 @@ function StageCompleteCard({ stage, onNext, isLastStage }) {
         position: "absolute",
         inset: 0,
         zIndex: 50,
-        background: "rgba(8,6,3,0.96)",
+        background:
+          "radial-gradient(circle at top, rgba(22,32,48,0.95) 0%, rgba(14,12,10,0.96) 74%)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -2036,9 +1982,9 @@ function StageCompleteCard({ stage, onNext, isLastStage }) {
       <div style={{ textAlign: "center" }}>
         <div
           style={{
-            fontSize: 10,
+            fontSize: 13,
             letterSpacing: 5,
-            color: "#5C4A1E",
+            color: "#D0D8E8",
             marginBottom: 14,
           }}
         >
@@ -2046,8 +1992,8 @@ function StageCompleteCard({ stage, onNext, isLastStage }) {
         </div>
         <div
           style={{
-            fontSize: 30,
-            color: "#C8961E",
+            fontSize: 38,
+            color: "#F2CF81",
             letterSpacing: 2,
             marginBottom: 12,
             textShadow: "0 0 20px rgba(200,150,30,0.3)",
@@ -2057,8 +2003,8 @@ function StageCompleteCard({ stage, onNext, isLastStage }) {
         </div>
         <div
           style={{
-            fontSize: 11,
-            color: "#5C4A1E",
+            fontSize: 15,
+            color: "#EFF2FA",
             maxWidth: 420,
             lineHeight: 1.8,
             borderLeft: "2px solid #2A2010",
@@ -2088,12 +2034,12 @@ function StageCompleteCard({ stage, onNext, isLastStage }) {
       <button
         onClick={onNext}
         style={{
-          padding: "12px 40px",
+          padding: "14px 44px",
           background: "transparent",
-          border: "1px solid #C8961E",
-          color: "#C8961E",
+          border: "2px solid #F2CF81",
+          color: "#F2CF81",
           fontFamily: "'Courier New', monospace",
-          fontSize: 11,
+          fontSize: 14,
           letterSpacing: 4,
           cursor: "pointer",
         }}
@@ -2104,7 +2050,7 @@ function StageCompleteCard({ stage, onNext, isLastStage }) {
           e.target.style.background = "transparent";
         }}
       >
-        {isLastStage ? "CLAIM THE TREASURE" : `STAGE ${stage.id + 1} →`}
+        {isLastStage ? "VIEW WHAT'S NEXT" : `STAGE ${stage.id + 1} →`}
       </button>
     </div>
   );
@@ -2120,7 +2066,8 @@ function GameOverScreen({ stage, onRetry }) {
         position: "absolute",
         inset: 0,
         zIndex: 60,
-        background: "rgba(8,6,3,0.97)",
+        background:
+          "radial-gradient(circle at top, rgba(58,26,26,0.94) 0%, rgba(18,10,10,0.96) 76%)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -2140,9 +2087,9 @@ function GameOverScreen({ stage, onRetry }) {
       <div style={{ textAlign: "center" }}>
         <div
           style={{
-            fontSize: 10,
+            fontSize: 13,
             letterSpacing: 5,
-            color: "#5C2020",
+            color: "#FFC4C4",
             marginBottom: 14,
           }}
         >
@@ -2150,8 +2097,8 @@ function GameOverScreen({ stage, onRetry }) {
         </div>
         <div
           style={{
-            fontSize: 30,
-            color: "#8B2020",
+            fontSize: 38,
+            color: "#FF7E7E",
             letterSpacing: 2,
             marginBottom: 8,
           }}
@@ -2160,8 +2107,8 @@ function GameOverScreen({ stage, onRetry }) {
         </div>
         <div
           style={{
-            fontSize: 11,
-            color: "#3A2020",
+            fontSize: 15,
+            color: "#FFE2E2",
             lineHeight: 1.8,
             maxWidth: 360,
           }}
@@ -2173,12 +2120,12 @@ function GameOverScreen({ stage, onRetry }) {
       <button
         onClick={onRetry}
         style={{
-          padding: "12px 40px",
+          padding: "14px 44px",
           background: "transparent",
-          border: "1px solid #8B2020",
-          color: "#8B2020",
+          border: "2px solid #FF7E7E",
+          color: "#FF9A9A",
           fontFamily: "'Courier New', monospace",
-          fontSize: 11,
+          fontSize: 14,
           letterSpacing: 4,
           cursor: "pointer",
         }}
@@ -2204,7 +2151,8 @@ function IntroScreen({ onStart }) {
       style={{
         position: "fixed",
         inset: 0,
-        background: "#080603",
+        background:
+          "radial-gradient(circle at 20% 0%, #293855 0%, #1C263B 35%, #15110D 72%)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -2233,9 +2181,9 @@ function IntroScreen({ onStart }) {
       <div style={{ textAlign: "center", maxWidth: 560 }}>
         <div
           style={{
-            fontSize: 11,
+            fontSize: 14,
             letterSpacing: 6,
-            color: "#5C4A1E",
+            color: "#D0D8E8",
             marginBottom: 16,
           }}
         >
@@ -2243,9 +2191,9 @@ function IntroScreen({ onStart }) {
         </div>
         <h1
           style={{
-            fontSize: 40,
+            fontSize: 52,
             fontWeight: "normal",
-            color: "#C8961E",
+            color: "#F2CF81",
             lineHeight: 1.2,
             margin: "0 0 8px",
             letterSpacing: 2,
@@ -2256,9 +2204,9 @@ function IntroScreen({ onStart }) {
         </h1>
         <h1
           style={{
-            fontSize: 40,
+            fontSize: 52,
             fontWeight: "normal",
-            color: "#8B7340",
+            color: "#E6EEF9",
             lineHeight: 1.2,
             margin: "0 0 24px",
             letterSpacing: 2,
@@ -2268,8 +2216,8 @@ function IntroScreen({ onStart }) {
         </h1>
         <p
           style={{
-            color: "#5C4A1E",
-            fontSize: 12,
+            color: "#EFF2FA",
+            fontSize: 16,
             lineHeight: 1.8,
             letterSpacing: 1,
             borderLeft: "2px solid #3A2E12",
@@ -2313,16 +2261,16 @@ function IntroScreen({ onStart }) {
               gap: 5,
             }}
           >
-            <div style={{ fontSize: 9, letterSpacing: 4, color: "#C8961E" }}>
+            <div style={{ fontSize: 12, letterSpacing: 4, color: "#F2CF81" }}>
               {role}
             </div>
-            <div style={{ fontSize: 10, color: "#5C4A1E" }}>
+            <div style={{ fontSize: 13, color: "#DCE3F2" }}>
               {side} of screen
             </div>
-            <div style={{ fontSize: 10, color: "#3A2E12", lineHeight: 1.5 }}>
+            <div style={{ fontSize: 13, color: "#EFF2FA", lineHeight: 1.5 }}>
               {desc}
             </div>
-            <div style={{ fontSize: 9, color: "#8B7340", marginTop: 4 }}>
+            <div style={{ fontSize: 12, color: "#F2CF81", marginTop: 4 }}>
               {keys}
             </div>
           </div>
@@ -2331,12 +2279,12 @@ function IntroScreen({ onStart }) {
       <button
         onClick={onStart}
         style={{
-          padding: "14px 48px",
+          padding: "16px 52px",
           background: "transparent",
-          border: "1px solid #C8961E",
-          color: "#C8961E",
+          border: "2px solid #F2CF81",
+          color: "#F2CF81",
           fontFamily: "'Courier New', monospace",
-          fontSize: 11,
+          fontSize: 14,
           letterSpacing: 4,
           cursor: "pointer",
         }}
@@ -2358,6 +2306,154 @@ function IntroScreen({ onStart }) {
   );
 }
 
+function PostStage6Preview({ onContinue }) {
+  return (
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 120,
+        background:
+          "radial-gradient(circle at top, rgba(22,32,48,0.96) 0%, rgba(12,12,12,0.96) 72%)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 28,
+        fontFamily: "'Courier New', monospace",
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          inset: 28,
+          border: "1px solid #405274",
+          pointerEvents: "none",
+        }}
+      />
+      <div style={{ textAlign: "center", maxWidth: 780 }}>
+        <div
+          style={{
+            fontSize: 13,
+            letterSpacing: 4,
+            color: "#D0D8E8",
+            marginBottom: 14,
+          }}
+        >
+          STAGE 6 COMPLETE
+        </div>
+        <div
+          style={{
+            fontSize: 40,
+            color: "#F2CF81",
+            letterSpacing: 2,
+            marginBottom: 14,
+          }}
+        >
+          What Happens Next
+        </div>
+        <div
+          style={{
+            fontSize: 16,
+            lineHeight: 1.8,
+            color: "#EFF2FA",
+            borderLeft: "2px solid #405274",
+            paddingLeft: 18,
+            textAlign: "left",
+          }}
+        >
+          The blackout trial is over.
+          <br />
+          The navigator&apos;s helm stayed lit while the Captain navigated from memory.
+          <br />
+          <br />
+          Now both players enter the Trust Ceremony.
+          <br />
+          If both choose &quot;I TRUST YOU&quot;, the vault opens.
+        </div>
+      </div>
+      <button
+        onClick={onContinue}
+        style={{
+          padding: "14px 44px",
+          background: "transparent",
+          border: "2px solid #F2CF81",
+          color: "#F2CF81",
+          fontFamily: "'Courier New', monospace",
+          fontSize: 14,
+          letterSpacing: 4,
+          cursor: "pointer",
+        }}
+      >
+        CONTINUE TO TRUST CEREMONY
+      </button>
+    </div>
+  );
+}
+
+function AdminStageJump({ onJump }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div style={{ position: "fixed", right: 12, top: 12, zIndex: 260 }}>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        style={{
+          background: "rgba(20,24,34,0.95)",
+          border: "1px solid #8AA6D8",
+          color: "#D7E5FF",
+          fontFamily: "'Courier New', monospace",
+          fontSize: 11,
+          letterSpacing: 2,
+          padding: "8px 12px",
+          cursor: "pointer",
+          borderRadius: 3,
+        }}
+      >
+        ADMIN STAGE
+      </button>
+      {open && (
+        <div
+          style={{
+            marginTop: 6,
+            background: "rgba(10,12,18,0.96)",
+            border: "1px solid #405274",
+            padding: 8,
+            display: "grid",
+            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+            gap: 6,
+            minWidth: 180,
+          }}
+        >
+          {STAGES.map((s) => (
+            <button
+              key={s.id}
+              onClick={() => {
+                onJump(s.id);
+                setOpen(false);
+              }}
+              style={{
+                background: "rgba(28,38,56,0.9)",
+                border: "1px solid #5C74A8",
+                color: "#EFF5FF",
+                fontFamily: "'Courier New', monospace",
+                fontSize: 11,
+                letterSpacing: 1,
+                padding: "8px 6px",
+                cursor: "pointer",
+                borderRadius: 2,
+              }}
+              title={s.name}
+            >
+              STAGE {s.id}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ═══════════════════════════════════════════════════════════════════════════════
 //  MAIN GAME
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -2369,7 +2465,7 @@ export default function BlindCaptainGame() {
   const [pingCell, setPingCell] = useState(null);
   const [damageFlash, setDamageFlash] = useState(false);
   const [mapData, setMapData] = useState(() => buildMap(1));
-  const [memoryHidden, setMemoryHidden] = useState(false);
+  const [captainBlackout, setCaptainBlackout] = useState(false);
   const [memoryCountdown, setMemoryCountdown] = useState(10);
   const [shakeOffset, setShakeOffset] = useState({ x: 0, y: 0 });
 
@@ -2456,7 +2552,7 @@ export default function BlindCaptainGame() {
     setShip(makeShip(s));
     setCaptorPos({ x: 1, y: 1 });
     setMapData(buildMap(s.id));
-    setMemoryHidden(false);
+    setCaptainBlackout(false);
     setMemoryCountdown(10);
     setScreen("playing");
 
@@ -2467,7 +2563,7 @@ export default function BlindCaptainGame() {
         setMemoryCountdown(count);
         if (count <= 0) {
           clearInterval(memTimer.current);
-          setMemoryHidden(true);
+          setCaptainBlackout(true);
         }
       }, 1000);
     }
@@ -2674,7 +2770,7 @@ export default function BlindCaptainGame() {
       setCaptainTrusts(false);
       setNavigatorTrusts(false);
       setVaultMerging(false);
-      setScreen("trust");
+      setScreen("postStage6Preview");
       return;
     }
     const next = stageIdx + 1;
@@ -2687,25 +2783,72 @@ export default function BlindCaptainGame() {
     clearTimeout(trustWindowTimer.current);
     setCaptainTrusts(false);
     setNavigatorTrusts(false);
+    setCaptainBlackout(false);
+    setScreen("stageIntro");
+  }, []);
+
+  const goBackStage = useCallback(() => {
+    clearInterval(memTimer.current);
+    clearTimeout(pingTimer.current);
+    clearTimeout(damageTimer.current);
+    clearTimeout(trustWindowTimer.current);
+    setCaptainBlackout(false);
+    setCaptainTrusts(false);
+    setNavigatorTrusts(false);
+    if (stageIdx === 0) {
+      setScreen("intro");
+      return;
+    }
+    setStageIdx((i) => i - 1);
+    setScreen("stageIntro");
+  }, [stageIdx]);
+
+  const adminJumpToStage = useCallback((stageId) => {
+    const idx = STAGES.findIndex((s) => s.id === stageId);
+    if (idx < 0) return;
+    clearInterval(memTimer.current);
+    clearTimeout(pingTimer.current);
+    clearTimeout(damageTimer.current);
+    clearTimeout(trustWindowTimer.current);
+    setCaptainBlackout(false);
+    setMemoryCountdown(10);
+    setCaptainTrusts(false);
+    setNavigatorTrusts(false);
+    setVaultMerging(false);
+    setStageIdx(idx);
     setScreen("stageIntro");
   }, []);
 
   // ──────────────────────────────────────────────────────────────────────────
   if (screen === "intro")
-    return <IntroScreen onStart={() => setScreen("stageIntro")} />;
+    return (
+      <>
+        <IntroScreen onStart={() => setScreen("stageIntro")} />
+        <AdminStageJump onJump={adminJumpToStage} />
+      </>
+    );
+
+  if (screen === "postStage6Preview")
+    return (
+      <>
+        <PostStage6Preview onContinue={() => setScreen("trust")} />
+        <AdminStageJump onJump={adminJumpToStage} />
+      </>
+    );
 
   // ── TRUST SCREEN ──────────────────────────────────────────────────────────
   if (screen === "trust") {
     return (
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          background: "#080603",
-          fontFamily: "'Courier New', monospace",
-          overflow: "hidden",
-        }}
-      >
+      <>
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "#080603",
+            fontFamily: "'Courier New', monospace",
+            overflow: "hidden",
+          }}
+        >
         <style>{`
           @keyframes trustGlow   { 0%,100% { box-shadow: 0 0 0px rgba(212,164,32,0); } 50% { box-shadow: 0 0 40px rgba(212,164,32,0.7); } }
           @keyframes trustPulse  { 0%,100% { opacity: 0.35; transform: scale(1); }    50% { opacity: 1; transform: scale(1.04); } }
@@ -2997,28 +3140,31 @@ export default function BlindCaptainGame() {
               </div>
             </div>
           )}
-      </div>
+        </div>
+        <AdminStageJump onJump={adminJumpToStage} />
+      </>
     );
   }
 
   // ── VAULT SCREEN ──────────────────────────────────────────────────────────
   if (screen === "vault") {
     return (
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          background:
-            "radial-gradient(ellipse at center, #1A1208 0%, #080603 70%)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 0,
-          fontFamily: "'Courier New', monospace",
-          overflow: "hidden",
-        }}
-      >
+      <>
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background:
+              "radial-gradient(ellipse at center, #1A1208 0%, #080603 70%)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 0,
+            fontFamily: "'Courier New', monospace",
+            overflow: "hidden",
+          }}
+        >
         <style>{`
           @keyframes vaultReveal  { 0% { opacity:0; transform: scale(0.88) translateY(28px); } 100% { opacity:1; transform: scale(1) translateY(0); } }
           @keyframes goldShimmer  { 0% { background-position: -300% center; } 100% { background-position: 300% center; } }
@@ -3268,7 +3414,9 @@ export default function BlindCaptainGame() {
             </button>
           </div>
         </div>
-      </div>
+        </div>
+        <AdminStageJump onJump={adminJumpToStage} />
+      </>
     );
   }
 
@@ -3295,6 +3443,29 @@ export default function BlindCaptainGame() {
       `}</style>
 
       <MuteButton />
+      <AdminStageJump onJump={adminJumpToStage} />
+      {screen === "playing" && (
+        <button
+          onClick={goBackStage}
+          style={{
+            position: "fixed",
+            top: 50,
+            left: 12,
+            zIndex: 210,
+            background: "rgba(18,24,36,0.9)",
+            border: "2px solid #F2CF81",
+            color: "#F2CF81",
+            fontFamily: "'Courier New', monospace",
+            fontSize: 12,
+            letterSpacing: 2,
+            padding: "8px 14px",
+            cursor: "pointer",
+            borderRadius: 3,
+          }}
+        >
+          ← BACK STAGE
+        </button>
+      )}
 
       {/* Divider */}
       <div
@@ -3318,7 +3489,7 @@ export default function BlindCaptainGame() {
         captorPos={captorPos}
         stage={stage}
         mapData={mapData}
-        memoryHidden={memoryHidden}
+        captainBlackout={captainBlackout}
         memoryCountdown={memoryCountdown}
         shakeOffset={shakeOffset}
       />
@@ -3352,7 +3523,6 @@ export default function BlindCaptainGame() {
           });
         }}
         stageIndex={stageIdx}
-        memoryHidden={memoryHidden}
         shakeOffset={shakeOffset}
       />
 
