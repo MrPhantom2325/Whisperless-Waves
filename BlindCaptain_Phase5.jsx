@@ -867,7 +867,8 @@ function StageIntroCard({ stage, onBegin }) {
           )}
           {stage.memoryMode && (
             <div style={{ fontSize: 13, color: "#FFD686" }}>
-              ⚠ CAPTAIN BLACKOUT — chart disappears in 10 seconds. Navigator stays lit.
+              ⚠ CAPTAIN BLACKOUT — chart disappears in 10 seconds. Navigator
+              stays lit.
             </div>
           )}
         </div>
@@ -2364,7 +2365,8 @@ function PostStage6Preview({ onContinue }) {
         >
           The blackout trial is over.
           <br />
-          The navigator&apos;s helm stayed lit while the Captain navigated from memory.
+          The navigator&apos;s helm stayed lit while the Captain navigated from
+          memory.
           <br />
           <br />
           Now both players enter the Trust Ceremony.
@@ -2803,6 +2805,13 @@ export default function BlindCaptainGame() {
     setScreen("stageIntro");
   }, [stageIdx]);
 
+  const forceWinStage = useCallback(() => {
+    clearInterval(memTimer.current);
+    setCaptainBlackout(false);
+    getAudio().playStageComplete();
+    setScreen("stageComplete");
+  }, []);
+
   const adminJumpToStage = useCallback((stageId) => {
     const idx = STAGES.findIndex((s) => s.id === stageId);
     if (idx < 0) return;
@@ -2824,7 +2833,7 @@ export default function BlindCaptainGame() {
     return (
       <>
         <IntroScreen onStart={() => setScreen("stageIntro")} />
-        <AdminStageJump onJump={adminJumpToStage} />
+        {/* <AdminStageJump onJump={adminJumpToStage} /> */}
       </>
     );
 
@@ -2832,7 +2841,7 @@ export default function BlindCaptainGame() {
     return (
       <>
         <PostStage6Preview onContinue={() => setScreen("trust")} />
-        <AdminStageJump onJump={adminJumpToStage} />
+        {/* <AdminStageJump onJump={adminJumpToStage} /> */}
       </>
     );
 
@@ -2849,299 +2858,299 @@ export default function BlindCaptainGame() {
             overflow: "hidden",
           }}
         >
-        <style>{`
+          <style>{`
           @keyframes trustGlow   { 0%,100% { box-shadow: 0 0 0px rgba(212,164,32,0); } 50% { box-shadow: 0 0 40px rgba(212,164,32,0.7); } }
           @keyframes trustPulse  { 0%,100% { opacity: 0.35; transform: scale(1); }    50% { opacity: 1; transform: scale(1.04); } }
           @keyframes mergeCollapse { 0% { opacity:1; clip-path: inset(0 0 0 0); } 100% { opacity:0; clip-path: inset(0 50% 0 50%); } }
         `}</style>
-        <div
-          style={{
-            display: "flex",
-            width: "100%",
-            height: "100%",
-            animation: vaultMerging
-              ? "mergeCollapse 1.2s ease-in forwards"
-              : "none",
-          }}
-        >
-          {/* Captain side */}
           <div
             style={{
-              flex: "0 0 50%",
-              height: "100%",
-              background: "linear-gradient(160deg, #1a1208 0%, #0d1a12 100%)",
-              borderRight: "1px solid #3A2E12",
               display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 32,
-              position: "relative",
-            }}
-          >
-            {[...Array(12)].map((_, i) => (
-              <div
-                key={i}
-                style={{
-                  position: "absolute",
-                  left: `${10 + ((i * 7) % 80)}%`,
-                  top: `${15 + ((i * 13) % 70)}%`,
-                  width: 2,
-                  height: 2,
-                  borderRadius: "50%",
-                  background: captainTrusts ? "#D4A420" : "#2A2010",
-                  transition: "background 0.4s",
-                  animation: captainTrusts
-                    ? `trustPulse ${1.2 + i * 0.1}s ease-in-out infinite`
-                    : "none",
-                  animationDelay: `${i * 0.08}s`,
-                }}
-              />
-            ))}
-            <div style={{ textAlign: "center" }}>
-              <div
-                style={{
-                  fontSize: 9,
-                  letterSpacing: 5,
-                  color: "#3A2E12",
-                  marginBottom: 12,
-                }}
-              >
-                CAPTAIN
-              </div>
-              <div
-                style={{
-                  fontSize: 28,
-                  color: captainTrusts ? "#D4A420" : "#5C4A1E",
-                  letterSpacing: 2,
-                  lineHeight: 1.3,
-                  marginBottom: 8,
-                  transition: "color 0.4s",
-                  textShadow: captainTrusts
-                    ? "0 0 30px rgba(212,164,32,0.5)"
-                    : "none",
-                }}
-              >
-                {captainTrusts
-                  ? "I TRUST YOU"
-                  : "Do you trust\nyour Navigator?"}
-              </div>
-              <div
-                style={{
-                  fontSize: 10,
-                  color: "#3A2E12",
-                  letterSpacing: 1,
-                  lineHeight: 1.7,
-                  whiteSpace: "pre-line",
-                }}
-              >
-                {captainTrusts
-                  ? "Waiting for the Navigator..."
-                  : "Six stages. You've heard their voice.\nYou've felt them steer true."}
-              </div>
-            </div>
-            <button
-              onClick={() => handleTrustPress("captain")}
-              disabled={captainTrusts}
-              style={{
-                padding: "16px 48px",
-                background: captainTrusts
-                  ? "rgba(212,164,32,0.12)"
-                  : "transparent",
-                border: `2px solid ${captainTrusts ? "#D4A420" : "#5C4A1E"}`,
-                color: captainTrusts ? "#D4A420" : "#5C4A1E",
-                fontFamily: "'Courier New', monospace",
-                fontSize: 11,
-                letterSpacing: 4,
-                cursor: captainTrusts ? "default" : "pointer",
-                transition: "all 0.3s",
-                animation: captainTrusts
-                  ? "trustGlow 1.5s ease-in-out infinite"
-                  : "none",
-              }}
-            >
-              {captainTrusts ? "✦ TRUST GIVEN" : "[ T ] — I TRUST YOU"}
-            </button>
-            <div style={{ fontSize: 9, color: "#2A2010", letterSpacing: 2 }}>
-              PRESS T ON KEYBOARD
-            </div>
-          </div>
-
-          {/* Divider */}
-          <div
-            style={{
-              width: 3,
-              background: vaultMerging
-                ? "linear-gradient(to bottom, #D4A420, #C8961E, #D4A420)"
-                : "linear-gradient(to bottom, transparent, #5C4A1E 20%, #8B7340 50%, #5C4A1E 80%, transparent)",
-              boxShadow: vaultMerging
-                ? "0 0 20px rgba(212,164,32,0.8)"
-                : "0 0 12px rgba(139,115,64,0.3)",
-              transition: "all 0.4s",
-              flexShrink: 0,
-              zIndex: 10,
-            }}
-          />
-
-          {/* Navigator side */}
-          <div
-            style={{
-              flex: "0 0 50%",
+              width: "100%",
               height: "100%",
-              background: "linear-gradient(170deg, #110D08 0%, #1A1008 100%)",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 32,
-              position: "relative",
+              animation: vaultMerging
+                ? "mergeCollapse 1.2s ease-in forwards"
+                : "none",
             }}
           >
-            {[...Array(12)].map((_, i) => (
-              <div
-                key={i}
-                style={{
-                  position: "absolute",
-                  left: `${5 + ((i * 9) % 85)}%`,
-                  top: `${20 + ((i * 11) % 65)}%`,
-                  width: 2,
-                  height: 2,
-                  borderRadius: "50%",
-                  background: navigatorTrusts ? "#D4A420" : "#2A2010",
-                  transition: "background 0.4s",
-                  animation: navigatorTrusts
-                    ? `trustPulse ${1.3 + i * 0.09}s ease-in-out infinite`
-                    : "none",
-                  animationDelay: `${i * 0.07}s`,
-                }}
-              />
-            ))}
-            <div style={{ textAlign: "center" }}>
-              <div
-                style={{
-                  fontSize: 9,
-                  letterSpacing: 5,
-                  color: "#3A2E12",
-                  marginBottom: 12,
-                }}
-              >
-                NAVIGATOR
-              </div>
-              <div
-                style={{
-                  fontSize: 28,
-                  color: navigatorTrusts ? "#D4A420" : "#5C4A1E",
-                  letterSpacing: 2,
-                  lineHeight: 1.3,
-                  marginBottom: 8,
-                  transition: "color 0.4s",
-                  textShadow: navigatorTrusts
-                    ? "0 0 30px rgba(212,164,32,0.5)"
-                    : "none",
-                }}
-              >
-                {navigatorTrusts
-                  ? "I TRUST YOU"
-                  : "Do you trust\nyour Captain?"}
-              </div>
-              <div
-                style={{
-                  fontSize: 10,
-                  color: "#3A2E12",
-                  letterSpacing: 1,
-                  lineHeight: 1.7,
-                  whiteSpace: "pre-line",
-                }}
-              >
-                {navigatorTrusts
-                  ? "Waiting for the Captain..."
-                  : "Six seas. They described every reef.\nThey never let you run aground."}
-              </div>
-            </div>
-            <button
-              onClick={() => handleTrustPress("navigator")}
-              disabled={navigatorTrusts}
-              style={{
-                padding: "16px 48px",
-                background: navigatorTrusts
-                  ? "rgba(212,164,32,0.12)"
-                  : "transparent",
-                border: `2px solid ${navigatorTrusts ? "#D4A420" : "#5C4A1E"}`,
-                color: navigatorTrusts ? "#D4A420" : "#5C4A1E",
-                fontFamily: "'Courier New', monospace",
-                fontSize: 11,
-                letterSpacing: 4,
-                cursor: navigatorTrusts ? "default" : "pointer",
-                transition: "all 0.3s",
-                animation: navigatorTrusts
-                  ? "trustGlow 1.5s ease-in-out infinite"
-                  : "none",
-              }}
-            >
-              {navigatorTrusts ? "✦ TRUST GIVEN" : "[ Y ] — I TRUST YOU"}
-            </button>
-            <div style={{ fontSize: 9, color: "#2A2010", letterSpacing: 2 }}>
-              PRESS Y ON KEYBOARD
-            </div>
-          </div>
-        </div>
-
-        {!captainTrusts && !navigatorTrusts && (
-          <div
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              zIndex: 20,
-              textAlign: "center",
-              background: "#080603",
-              padding: "12px 20px",
-              border: "1px solid #2A2010",
-            }}
-          >
+            {/* Captain side */}
             <div
               style={{
-                fontSize: 9,
-                color: "#3A2E12",
-                letterSpacing: 3,
-                lineHeight: 2,
+                flex: "0 0 50%",
+                height: "100%",
+                background: "linear-gradient(160deg, #1a1208 0%, #0d1a12 100%)",
+                borderRight: "1px solid #3A2E12",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 32,
+                position: "relative",
               }}
             >
-              NO COUNTDOWN
-              <br />
-              NO HINT
-              <br />
-              JUST FEEL READY TOGETHER
+              {[...Array(12)].map((_, i) => (
+                <div
+                  key={i}
+                  style={{
+                    position: "absolute",
+                    left: `${10 + ((i * 7) % 80)}%`,
+                    top: `${15 + ((i * 13) % 70)}%`,
+                    width: 2,
+                    height: 2,
+                    borderRadius: "50%",
+                    background: captainTrusts ? "#D4A420" : "#2A2010",
+                    transition: "background 0.4s",
+                    animation: captainTrusts
+                      ? `trustPulse ${1.2 + i * 0.1}s ease-in-out infinite`
+                      : "none",
+                    animationDelay: `${i * 0.08}s`,
+                  }}
+                />
+              ))}
+              <div style={{ textAlign: "center" }}>
+                <div
+                  style={{
+                    fontSize: 9,
+                    letterSpacing: 5,
+                    color: "#3A2E12",
+                    marginBottom: 12,
+                  }}
+                >
+                  CAPTAIN
+                </div>
+                <div
+                  style={{
+                    fontSize: 28,
+                    color: captainTrusts ? "#D4A420" : "#5C4A1E",
+                    letterSpacing: 2,
+                    lineHeight: 1.3,
+                    marginBottom: 8,
+                    transition: "color 0.4s",
+                    textShadow: captainTrusts
+                      ? "0 0 30px rgba(212,164,32,0.5)"
+                      : "none",
+                  }}
+                >
+                  {captainTrusts
+                    ? "I TRUST YOU"
+                    : "Do you trust\nyour Navigator?"}
+                </div>
+                <div
+                  style={{
+                    fontSize: 10,
+                    color: "#3A2E12",
+                    letterSpacing: 1,
+                    lineHeight: 1.7,
+                    whiteSpace: "pre-line",
+                  }}
+                >
+                  {captainTrusts
+                    ? "Waiting for the Navigator..."
+                    : "Six stages. You've heard their voice.\nYou've felt them steer true."}
+                </div>
+              </div>
+              <button
+                onClick={() => handleTrustPress("captain")}
+                disabled={captainTrusts}
+                style={{
+                  padding: "16px 48px",
+                  background: captainTrusts
+                    ? "rgba(212,164,32,0.12)"
+                    : "transparent",
+                  border: `2px solid ${captainTrusts ? "#D4A420" : "#5C4A1E"}`,
+                  color: captainTrusts ? "#D4A420" : "#5C4A1E",
+                  fontFamily: "'Courier New', monospace",
+                  fontSize: 11,
+                  letterSpacing: 4,
+                  cursor: captainTrusts ? "default" : "pointer",
+                  transition: "all 0.3s",
+                  animation: captainTrusts
+                    ? "trustGlow 1.5s ease-in-out infinite"
+                    : "none",
+                }}
+              >
+                {captainTrusts ? "✦ TRUST GIVEN" : "[ T ] — I TRUST YOU"}
+              </button>
+              <div style={{ fontSize: 9, color: "#2A2010", letterSpacing: 2 }}>
+                PRESS T ON KEYBOARD
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div
+              style={{
+                width: 3,
+                background: vaultMerging
+                  ? "linear-gradient(to bottom, #D4A420, #C8961E, #D4A420)"
+                  : "linear-gradient(to bottom, transparent, #5C4A1E 20%, #8B7340 50%, #5C4A1E 80%, transparent)",
+                boxShadow: vaultMerging
+                  ? "0 0 20px rgba(212,164,32,0.8)"
+                  : "0 0 12px rgba(139,115,64,0.3)",
+                transition: "all 0.4s",
+                flexShrink: 0,
+                zIndex: 10,
+              }}
+            />
+
+            {/* Navigator side */}
+            <div
+              style={{
+                flex: "0 0 50%",
+                height: "100%",
+                background: "linear-gradient(170deg, #110D08 0%, #1A1008 100%)",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 32,
+                position: "relative",
+              }}
+            >
+              {[...Array(12)].map((_, i) => (
+                <div
+                  key={i}
+                  style={{
+                    position: "absolute",
+                    left: `${5 + ((i * 9) % 85)}%`,
+                    top: `${20 + ((i * 11) % 65)}%`,
+                    width: 2,
+                    height: 2,
+                    borderRadius: "50%",
+                    background: navigatorTrusts ? "#D4A420" : "#2A2010",
+                    transition: "background 0.4s",
+                    animation: navigatorTrusts
+                      ? `trustPulse ${1.3 + i * 0.09}s ease-in-out infinite`
+                      : "none",
+                    animationDelay: `${i * 0.07}s`,
+                  }}
+                />
+              ))}
+              <div style={{ textAlign: "center" }}>
+                <div
+                  style={{
+                    fontSize: 9,
+                    letterSpacing: 5,
+                    color: "#3A2E12",
+                    marginBottom: 12,
+                  }}
+                >
+                  NAVIGATOR
+                </div>
+                <div
+                  style={{
+                    fontSize: 28,
+                    color: navigatorTrusts ? "#D4A420" : "#5C4A1E",
+                    letterSpacing: 2,
+                    lineHeight: 1.3,
+                    marginBottom: 8,
+                    transition: "color 0.4s",
+                    textShadow: navigatorTrusts
+                      ? "0 0 30px rgba(212,164,32,0.5)"
+                      : "none",
+                  }}
+                >
+                  {navigatorTrusts
+                    ? "I TRUST YOU"
+                    : "Do you trust\nyour Captain?"}
+                </div>
+                <div
+                  style={{
+                    fontSize: 10,
+                    color: "#3A2E12",
+                    letterSpacing: 1,
+                    lineHeight: 1.7,
+                    whiteSpace: "pre-line",
+                  }}
+                >
+                  {navigatorTrusts
+                    ? "Waiting for the Captain..."
+                    : "Six seas. They described every reef.\nThey never let you run aground."}
+                </div>
+              </div>
+              <button
+                onClick={() => handleTrustPress("navigator")}
+                disabled={navigatorTrusts}
+                style={{
+                  padding: "16px 48px",
+                  background: navigatorTrusts
+                    ? "rgba(212,164,32,0.12)"
+                    : "transparent",
+                  border: `2px solid ${navigatorTrusts ? "#D4A420" : "#5C4A1E"}`,
+                  color: navigatorTrusts ? "#D4A420" : "#5C4A1E",
+                  fontFamily: "'Courier New', monospace",
+                  fontSize: 11,
+                  letterSpacing: 4,
+                  cursor: navigatorTrusts ? "default" : "pointer",
+                  transition: "all 0.3s",
+                  animation: navigatorTrusts
+                    ? "trustGlow 1.5s ease-in-out infinite"
+                    : "none",
+                }}
+              >
+                {navigatorTrusts ? "✦ TRUST GIVEN" : "[ Y ] — I TRUST YOU"}
+              </button>
+              <div style={{ fontSize: 9, color: "#2A2010", letterSpacing: 2 }}>
+                PRESS Y ON KEYBOARD
+              </div>
             </div>
           </div>
-        )}
-        {(captainTrusts || navigatorTrusts) &&
-          !(captainTrusts && navigatorTrusts) && (
+
+          {!captainTrusts && !navigatorTrusts && (
             <div
               style={{
                 position: "absolute",
-                bottom: 32,
+                top: "50%",
                 left: "50%",
-                transform: "translateX(-50%)",
+                transform: "translate(-50%, -50%)",
                 zIndex: 20,
                 textAlign: "center",
+                background: "#080603",
+                padding: "12px 20px",
+                border: "1px solid #2A2010",
               }}
             >
               <div
                 style={{
-                  fontSize: 10,
-                  color: "#8B7340",
+                  fontSize: 9,
+                  color: "#3A2E12",
                   letterSpacing: 3,
-                  animation: "trustPulse 1.2s ease-in-out infinite",
+                  lineHeight: 2,
                 }}
               >
-                ◆ ONE VOICE HAS SPOKEN ◆
+                NO COUNTDOWN
+                <br />
+                NO HINT
+                <br />
+                JUST FEEL READY TOGETHER
               </div>
             </div>
           )}
+          {(captainTrusts || navigatorTrusts) &&
+            !(captainTrusts && navigatorTrusts) && (
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: 32,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  zIndex: 20,
+                  textAlign: "center",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 10,
+                    color: "#8B7340",
+                    letterSpacing: 3,
+                    animation: "trustPulse 1.2s ease-in-out infinite",
+                  }}
+                >
+                  ◆ ONE VOICE HAS SPOKEN ◆
+                </div>
+              </div>
+            )}
         </div>
-        <AdminStageJump onJump={adminJumpToStage} />
+        {/* <AdminStageJump onJump={adminJumpToStage} /> */}
       </>
     );
   }
@@ -3165,7 +3174,7 @@ export default function BlindCaptainGame() {
             overflow: "hidden",
           }}
         >
-        <style>{`
+          <style>{`
           @keyframes vaultReveal  { 0% { opacity:0; transform: scale(0.88) translateY(28px); } 100% { opacity:1; transform: scale(1) translateY(0); } }
           @keyframes goldShimmer  { 0% { background-position: -300% center; } 100% { background-position: 300% center; } }
           @keyframes floatUp      { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
@@ -3174,248 +3183,248 @@ export default function BlindCaptainGame() {
           @keyframes staggerFadeIn { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: translateY(0); } }
         `}</style>
 
-        {[...Array(28)].map((_, i) => (
+          {[...Array(28)].map((_, i) => (
+            <div
+              key={i}
+              style={{
+                position: "absolute",
+                left: `${Math.random() * 100}%`,
+                top: `${20 + Math.random() * 80}%`,
+                width: i % 3 === 0 ? 3 : 2,
+                height: i % 3 === 0 ? 3 : 2,
+                borderRadius: "50%",
+                background:
+                  i % 4 === 0 ? "#D4A420" : i % 4 === 1 ? "#C8961E" : "#8B7340",
+                animation: `particleDrift ${2 + ((i * 0.17) % 2)}s ease-out infinite`,
+                animationDelay: `${(i * 0.13) % 2}s`,
+                "--dx": `${((i % 7) - 3) * 8}px`,
+                opacity: 0.5,
+              }}
+            />
+          ))}
+
           <div
-            key={i}
             style={{
               position: "absolute",
-              left: `${Math.random() * 100}%`,
-              top: `${20 + Math.random() * 80}%`,
-              width: i % 3 === 0 ? 3 : 2,
-              height: i % 3 === 0 ? 3 : 2,
-              borderRadius: "50%",
-              background:
-                i % 4 === 0 ? "#D4A420" : i % 4 === 1 ? "#C8961E" : "#8B7340",
-              animation: `particleDrift ${2 + ((i * 0.17) % 2)}s ease-out infinite`,
-              animationDelay: `${(i * 0.13) % 2}s`,
-              "--dx": `${((i % 7) - 3) * 8}px`,
-              opacity: 0.5,
+              inset: 16,
+              border: "1px solid #3A2E12",
+              animation: "borderPulse 3s ease-in-out infinite",
+              pointerEvents: "none",
             }}
           />
-        ))}
-
-        <div
-          style={{
-            position: "absolute",
-            inset: 16,
-            border: "1px solid #3A2E12",
-            animation: "borderPulse 3s ease-in-out infinite",
-            pointerEvents: "none",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: 22,
-            border: "1px solid #2A2010",
-            pointerEvents: "none",
-          }}
-        />
-
-        <div
-          style={{
-            textAlign: "center",
-            maxWidth: 640,
-            padding: "0 32px",
-            animation: "vaultReveal 1.2s cubic-bezier(0.16,1,0.3,1) forwards",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 24,
-          }}
-        >
           <div
             style={{
-              fontSize: 9,
-              letterSpacing: 7,
-              color: "#5C4A1E",
-              animation: "staggerFadeIn 0.6s ease-out 0.3s both",
+              position: "absolute",
+              inset: 22,
+              border: "1px solid #2A2010",
+              pointerEvents: "none",
             }}
-          >
-            THE VOYAGE IS COMPLETE
-          </div>
-          <div
-            style={{
-              fontSize: 64,
-              lineHeight: 1,
-              animation:
-                "floatUp 4s ease-in-out infinite, staggerFadeIn 0.8s ease-out 0.5s both",
-              filter: "drop-shadow(0 0 20px rgba(212,164,32,0.5))",
-            }}
-          >
-            🏴‍☠️
-          </div>
-          <div style={{ animation: "staggerFadeIn 0.8s ease-out 0.7s both" }}>
-            <div
-              style={{
-                fontSize: 48,
-                letterSpacing: 3,
-                lineHeight: 1,
-                background:
-                  "linear-gradient(90deg, #8B7340, #D4A420, #C8961E, #D4A420, #8B7340)",
-                backgroundSize: "300% auto",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                animation: "goldShimmer 4s linear infinite",
-                fontWeight: "normal",
-              }}
-            >
-              Isla del Tesoro
-            </div>
-            <div
-              style={{
-                fontSize: 11,
-                color: "#5C4A1E",
-                letterSpacing: 4,
-                marginTop: 6,
-              }}
-            >
-              THE TREASURE OF CAPTAIN BLACKWAVE VOSS
-            </div>
-          </div>
+          />
 
           <div
             style={{
-              width: "100%",
-              maxWidth: 520,
-              border: "1px solid #5C4A1E",
-              background:
-                "linear-gradient(135deg, #0D0904 0%, #1A1208 50%, #0D0904 100%)",
-              padding: "28px 32px",
-              position: "relative",
-              animation: "staggerFadeIn 0.8s ease-out 1s both",
-            }}
-          >
-            <div
-              style={{
-                fontSize: 11,
-                color: "#5C4A1E",
-                lineHeight: 2,
-                textAlign: "left",
-                borderLeft: "2px solid #3A2E12",
-                paddingLeft: 16,
-              }}
-            >
-              Six stages. Six seas. You sailed them as one.
-              <br />
-              The blind found their eyes in a voice.
-              <br />
-              The mute found their words in a hand on the helm.
-              <br />
-              <br />
-              <span style={{ color: "#8B7340" }}>
-                When you both said <em>I trust you</em> —<br />
-                the vault opened by itself.
-              </span>
-            </div>
-          </div>
-
-          <div
-            style={{
+              textAlign: "center",
+              maxWidth: 640,
+              padding: "0 32px",
+              animation: "vaultReveal 1.2s cubic-bezier(0.16,1,0.3,1) forwards",
               display: "flex",
-              gap: 10,
+              flexDirection: "column",
               alignItems: "center",
-              animation: "staggerFadeIn 0.6s ease-out 1.4s both",
+              gap: 24,
             }}
           >
-            {STAGES.map((s, i) => (
+            <div
+              style={{
+                fontSize: 9,
+                letterSpacing: 7,
+                color: "#5C4A1E",
+                animation: "staggerFadeIn 0.6s ease-out 0.3s both",
+              }}
+            >
+              THE VOYAGE IS COMPLETE
+            </div>
+            <div
+              style={{
+                fontSize: 64,
+                lineHeight: 1,
+                animation:
+                  "floatUp 4s ease-in-out infinite, staggerFadeIn 0.8s ease-out 0.5s both",
+                filter: "drop-shadow(0 0 20px rgba(212,164,32,0.5))",
+              }}
+            >
+              🏴‍☠️
+            </div>
+            <div style={{ animation: "staggerFadeIn 0.8s ease-out 0.7s both" }}>
               <div
-                key={s.id}
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: 4,
+                  fontSize: 48,
+                  letterSpacing: 3,
+                  lineHeight: 1,
+                  background:
+                    "linear-gradient(90deg, #8B7340, #D4A420, #C8961E, #D4A420, #8B7340)",
+                  backgroundSize: "300% auto",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  animation: "goldShimmer 4s linear infinite",
+                  fontWeight: "normal",
                 }}
               >
-                <div
-                  style={{
-                    width: 14,
-                    height: 14,
-                    borderRadius: "50%",
-                    background: "#D4A420",
-                    border: "1px solid #5C4A1E",
-                    boxShadow: "0 0 8px rgba(212,164,32,0.7)",
-                    animation: `floatUp ${2 + i * 0.15}s ease-in-out infinite`,
-                    animationDelay: `${i * 0.2}s`,
-                  }}
-                />
-                <div
-                  style={{ fontSize: 7, color: "#3A2E12", letterSpacing: 1 }}
-                >
-                  {s.id}
-                </div>
+                Isla del Tesoro
               </div>
-            ))}
-          </div>
+              <div
+                style={{
+                  fontSize: 11,
+                  color: "#5C4A1E",
+                  letterSpacing: 4,
+                  marginTop: 6,
+                }}
+              >
+                THE TREASURE OF CAPTAIN BLACKWAVE VOSS
+              </div>
+            </div>
 
-          <div
-            style={{
-              display: "flex",
-              gap: 12,
-              animation: "staggerFadeIn 0.6s ease-out 1.8s both",
-            }}
-          >
-            <button
-              onClick={() => {
-                setStageIdx(0);
-                setCaptainTrusts(false);
-                setNavigatorTrusts(false);
-                setScreen("intro");
-              }}
+            <div
               style={{
-                padding: "12px 36px",
-                background: "transparent",
+                width: "100%",
+                maxWidth: 520,
                 border: "1px solid #5C4A1E",
-                color: "#5C4A1E",
-                fontFamily: "'Courier New', monospace",
-                fontSize: 10,
-                letterSpacing: 4,
-                cursor: "pointer",
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.background = "rgba(92,74,30,0.15)";
-                e.target.style.color = "#8B7340";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background = "transparent";
-                e.target.style.color = "#5C4A1E";
+                background:
+                  "linear-gradient(135deg, #0D0904 0%, #1A1208 50%, #0D0904 100%)",
+                padding: "28px 32px",
+                position: "relative",
+                animation: "staggerFadeIn 0.8s ease-out 1s both",
               }}
             >
-              SAIL AGAIN
-            </button>
-            <button
-              onClick={() => {
-                setCaptainTrusts(false);
-                setNavigatorTrusts(false);
-                setScreen("trust");
-              }}
+              <div
+                style={{
+                  fontSize: 11,
+                  color: "#5C4A1E",
+                  lineHeight: 2,
+                  textAlign: "left",
+                  borderLeft: "2px solid #3A2E12",
+                  paddingLeft: 16,
+                }}
+              >
+                Six stages. Six seas. You sailed them as one.
+                <br />
+                The blind found their eyes in a voice.
+                <br />
+                The mute found their words in a hand on the helm.
+                <br />
+                <br />
+                <span style={{ color: "#8B7340" }}>
+                  When you both said <em>I trust you</em> —<br />
+                  the vault opened by itself.
+                </span>
+              </div>
+            </div>
+
+            <div
               style={{
-                padding: "12px 36px",
-                background: "transparent",
-                border: "1px solid #3A2E12",
-                color: "#3A2E12",
-                fontFamily: "'Courier New', monospace",
-                fontSize: 10,
-                letterSpacing: 4,
-                cursor: "pointer",
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.background = "rgba(58,46,18,0.15)";
-                e.target.style.color = "#5C4A1E";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background = "transparent";
-                e.target.style.color = "#3A2E12";
+                display: "flex",
+                gap: 10,
+                alignItems: "center",
+                animation: "staggerFadeIn 0.6s ease-out 1.4s both",
               }}
             >
-              BACK TO VAULT
-            </button>
+              {STAGES.map((s, i) => (
+                <div
+                  key={s.id}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 4,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 14,
+                      height: 14,
+                      borderRadius: "50%",
+                      background: "#D4A420",
+                      border: "1px solid #5C4A1E",
+                      boxShadow: "0 0 8px rgba(212,164,32,0.7)",
+                      animation: `floatUp ${2 + i * 0.15}s ease-in-out infinite`,
+                      animationDelay: `${i * 0.2}s`,
+                    }}
+                  />
+                  <div
+                    style={{ fontSize: 7, color: "#3A2E12", letterSpacing: 1 }}
+                  >
+                    {s.id}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                gap: 12,
+                animation: "staggerFadeIn 0.6s ease-out 1.8s both",
+              }}
+            >
+              <button
+                onClick={() => {
+                  setStageIdx(0);
+                  setCaptainTrusts(false);
+                  setNavigatorTrusts(false);
+                  setScreen("intro");
+                }}
+                style={{
+                  padding: "12px 36px",
+                  background: "transparent",
+                  border: "1px solid #5C4A1E",
+                  color: "#5C4A1E",
+                  fontFamily: "'Courier New', monospace",
+                  fontSize: 10,
+                  letterSpacing: 4,
+                  cursor: "pointer",
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = "rgba(92,74,30,0.15)";
+                  e.target.style.color = "#8B7340";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = "transparent";
+                  e.target.style.color = "#5C4A1E";
+                }}
+              >
+                SAIL AGAIN
+              </button>
+              <button
+                onClick={() => {
+                  setCaptainTrusts(false);
+                  setNavigatorTrusts(false);
+                  setScreen("trust");
+                }}
+                style={{
+                  padding: "12px 36px",
+                  background: "transparent",
+                  border: "1px solid #3A2E12",
+                  color: "#3A2E12",
+                  fontFamily: "'Courier New', monospace",
+                  fontSize: 10,
+                  letterSpacing: 4,
+                  cursor: "pointer",
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = "rgba(58,46,18,0.15)";
+                  e.target.style.color = "#5C4A1E";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = "transparent";
+                  e.target.style.color = "#3A2E12";
+                }}
+              >
+                BACK TO VAULT
+              </button>
+            </div>
           </div>
         </div>
-        </div>
-        <AdminStageJump onJump={adminJumpToStage} />
+        {/* <AdminStageJump onJump={adminJumpToStage} /> */}
       </>
     );
   }
@@ -3443,7 +3452,7 @@ export default function BlindCaptainGame() {
       `}</style>
 
       <MuteButton />
-      <AdminStageJump onJump={adminJumpToStage} />
+      {/* <AdminStageJump onJump={adminJumpToStage} /> */}
       {screen === "playing" && (
         <button
           onClick={goBackStage}
@@ -3466,6 +3475,28 @@ export default function BlindCaptainGame() {
           ← BACK STAGE
         </button>
       )}
+      {/* {screen === "playing" && (
+        <button
+          onClick={forceWinStage}
+          style={{
+            position: "fixed",
+            top: 17,
+            left: 160,
+            zIndex: 210,
+            background: "rgba(24,46,30,0.92)",
+            border: "2px solid #9FE3AA",
+            color: "#CFFFF0",
+            fontFamily: "'Courier New', monospace",
+            fontSize: 12,
+            letterSpacing: 2,
+            padding: "8px 14px",
+            cursor: "pointer",
+            borderRadius: 3,
+          }}
+        >
+          TEST WIN
+        </button>
+      )} */}
 
       {/* Divider */}
       <div
