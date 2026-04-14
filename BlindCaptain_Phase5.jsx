@@ -2803,6 +2803,13 @@ export default function BlindCaptainGame() {
     setScreen("stageIntro");
   }, [stageIdx]);
 
+  const forceWinStage = useCallback(() => {
+    clearInterval(memTimer.current);
+    setCaptainBlackout(false);
+    getAudio().playStageComplete();
+    setScreen("stageComplete");
+  }, []);
+
   const adminJumpToStage = useCallback((stageId) => {
     const idx = STAGES.findIndex((s) => s.id === stageId);
     if (idx < 0) return;
@@ -2824,7 +2831,7 @@ export default function BlindCaptainGame() {
     return (
       <>
         <IntroScreen onStart={() => setScreen("stageIntro")} />
-        <AdminStageJump onJump={adminJumpToStage} />
+        {/* <AdminStageJump onJump={adminJumpToStage} /> */}
       </>
     );
 
@@ -2832,7 +2839,7 @@ export default function BlindCaptainGame() {
     return (
       <>
         <PostStage6Preview onContinue={() => setScreen("trust")} />
-        <AdminStageJump onJump={adminJumpToStage} />
+        {/* <AdminStageJump onJump={adminJumpToStage} /> */}
       </>
     );
 
@@ -3141,7 +3148,7 @@ export default function BlindCaptainGame() {
             </div>
           )}
         </div>
-        <AdminStageJump onJump={adminJumpToStage} />
+        {/* <AdminStageJump onJump={adminJumpToStage} /> */}
       </>
     );
   }
@@ -3415,7 +3422,7 @@ export default function BlindCaptainGame() {
           </div>
         </div>
         </div>
-        <AdminStageJump onJump={adminJumpToStage} />
+        {/* <AdminStageJump onJump={adminJumpToStage} /> */}
       </>
     );
   }
@@ -3443,7 +3450,7 @@ export default function BlindCaptainGame() {
       `}</style>
 
       <MuteButton />
-      <AdminStageJump onJump={adminJumpToStage} />
+      {/* <AdminStageJump onJump={adminJumpToStage} /> */}
       {screen === "playing" && (
         <button
           onClick={goBackStage}
@@ -3466,6 +3473,28 @@ export default function BlindCaptainGame() {
           ← BACK STAGE
         </button>
       )}
+      {/* {screen === "playing" && (
+        <button
+          onClick={forceWinStage}
+          style={{
+            position: "fixed",
+            top: 17,
+            left: 160,
+            zIndex: 210,
+            background: "rgba(24,46,30,0.92)",
+            border: "2px solid #9FE3AA",
+            color: "#CFFFF0",
+            fontFamily: "'Courier New', monospace",
+            fontSize: 12,
+            letterSpacing: 2,
+            padding: "8px 14px",
+            cursor: "pointer",
+            borderRadius: 3,
+          }}
+        >
+          TEST WIN
+        </button>
+      )} */}
 
       {/* Divider */}
       <div
