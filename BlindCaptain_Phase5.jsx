@@ -499,19 +499,19 @@ function buildMap(stageId) {
 }
 
 const LANDMARKS = {
-  "3,8": "Skull Rock",
-  "9,3": "Twin Peaks",
-  "6,5": "The Serpent's Spine",
+  "3,8": " ",
+  "9,3": "",
+  "6,5": "",
 };
 
-function makeShip(stage) {
+function makeShip(stage, hullHP = 3) {
   return {
     x: 1,
     y: 1,
     heading: 0,
     speed: 0,
     sails: 0,
-    hullHP: 3,
+    hullHP,
     anchor: false,
     windDir: stage.windDir,
     windSpeed: stage.windSpeed,
@@ -555,7 +555,7 @@ const btnStyle = {
   border: "1px solid #3A2E12",
   color: "#8B7340",
   fontFamily: "'Courier New', monospace",
-  fontSize: 10,
+  fontSize: 13,
   letterSpacing: 1,
   cursor: "pointer",
   borderRadius: 2,
@@ -770,7 +770,7 @@ function MuteButton() {
         border: "1px solid #3A2E12",
         color: muted ? "#3A2E12" : "#8B7340",
         fontFamily: "'Courier New', monospace",
-        fontSize: 9,
+        fontSize: 12,
         letterSpacing: 2,
         padding: "5px 10px",
         cursor: "pointer",
@@ -814,7 +814,7 @@ function StageIntroCard({ stage, onBegin }) {
       <div style={{ textAlign: "center" }}>
         <div
           style={{
-            fontSize: 13,
+            fontSize: 16,
             letterSpacing: 5,
             color: "#D0D8E8",
             marginBottom: 12,
@@ -860,7 +860,7 @@ function StageIntroCard({ stage, onBegin }) {
         >
           <div
             style={{
-              fontSize: 12,
+              fontSize: 15,
               letterSpacing: 3,
               color: "#D0D8E8",
               marginBottom: 4,
@@ -871,23 +871,26 @@ function StageIntroCard({ stage, onBegin }) {
           <div style={{ fontSize: 15, color: "#EFF2FA", lineHeight: 1.7 }}>
             {stage.objective}
           </div>
+          <div style={{ fontSize: 16, color: "#FFD686" }}>
+            ❤ RUN LIVES — You have 3 lives for the full Stage 1-6 voyage.
+          </div>
           {stage.stormActive && (
-            <div style={{ fontSize: 13, color: "#FFB4B4" }}>
+            <div style={{ fontSize: 16, color: "#FFB4B4" }}>
               ⚠ STORM ACTIVE — thunder, rain, blurred charts. Stay calm.
             </div>
           )}
           {stage.fogRadius && (
-            <div style={{ fontSize: 13, color: "#A7D7FF" }}>
+            <div style={{ fontSize: 16, color: "#A7D7FF" }}>
               ⚠ FOG — visibility limited to {stage.fogRadius} tiles around ship.
             </div>
           )}
           {stage.falseLandmarks && (
-            <div style={{ fontSize: 13, color: "#FFB4B4" }}>
+            <div style={{ fontSize: 16, color: "#FFB4B4" }}>
               ⚠ DECOYS — two islands mimic the destination. Only one is marked ✦
             </div>
           )}
           {stage.memoryMode && (
-            <div style={{ fontSize: 13, color: "#FFD686" }}>
+            <div style={{ fontSize: 16, color: "#FFD686" }}>
               ⚠ CAPTAIN BLACKOUT — chart disappears in 10 seconds. Navigator
               stays lit.
             </div>
@@ -1029,7 +1032,7 @@ function CaptainPanel({
           </div>
           <div
             style={{
-              fontSize: 10,
+              fontSize: 14,
               color: "#2A2010",
               fontFamily: "'Courier New', monospace",
               letterSpacing: 2,
@@ -1061,7 +1064,7 @@ function CaptainPanel({
             padding: "6px 24px",
             textAlign: "center",
             fontFamily: "'Courier New', monospace",
-            fontSize: 11,
+            fontSize: 14,
             color: "#C8961E",
             letterSpacing: 2,
           }}
@@ -1083,7 +1086,7 @@ function CaptainPanel({
       >
         <span
           style={{
-            fontSize: 10,
+            fontSize: 13,
             letterSpacing: 4,
             color: "#8B7340",
             fontFamily: "'Courier New', monospace",
@@ -1101,7 +1104,7 @@ function CaptainPanel({
         {stage.fogRadius && (
           <span
             style={{
-              fontSize: 9,
+              fontSize: 12,
               color: "#4A7FBB",
               fontFamily: "'Courier New', monospace",
             }}
@@ -1112,7 +1115,7 @@ function CaptainPanel({
         {stage.stormActive && (
           <span
             style={{
-              fontSize: 9,
+              fontSize: 12,
               color: "#8B3A3A",
               fontFamily: "'Courier New', monospace",
               animation: "stormPulse 1.2s ease-in-out infinite",
@@ -1123,7 +1126,7 @@ function CaptainPanel({
         )}
         <span
           style={{
-            fontSize: 9,
+            fontSize: 12,
             color: "#3A2E12",
             fontFamily: "'Courier New', monospace",
           }}
@@ -1213,7 +1216,7 @@ function CaptainPanel({
                         bottom: 1,
                         left: 0,
                         right: 0,
-                        fontSize: 6,
+                        fontSize: 9,
                         color: type === "decoy" ? "#5C4A1E" : "#8B7340",
                         textAlign: "center",
                         fontFamily: "'Courier New', monospace",
@@ -1308,10 +1311,10 @@ function CaptainPanel({
             key={label}
             style={{ display: "flex", alignItems: "center", gap: 4 }}
           >
-            <span style={{ fontSize: 11 }}>{icon}</span>
+            <span style={{ fontSize: 14 }}>{icon}</span>
             <span
               style={{
-                fontSize: 8,
+                fontSize: 11,
                 color,
                 fontFamily: "'Courier New', monospace",
                 letterSpacing: 1,
@@ -1324,7 +1327,7 @@ function CaptainPanel({
         {stage.falseLandmarks && (
           <span
             style={{
-              fontSize: 8,
+              fontSize: 11,
               color: "#8B3A3A",
               fontFamily: "'Courier New', monospace",
               letterSpacing: 1,
@@ -1407,7 +1410,7 @@ function NavigatorPanel({
       >
         <span
           style={{
-            fontSize: 10,
+            fontSize: 13,
             letterSpacing: 4,
             color: "#8B7340",
             fontFamily: "'Courier New', monospace",
@@ -1425,7 +1428,7 @@ function NavigatorPanel({
         {stage.controlLag > 0 && (
           <span
             style={{
-              fontSize: 9,
+              fontSize: 12,
               color: "#8B3A3A",
               fontFamily: "'Courier New', monospace",
             }}
@@ -1435,7 +1438,7 @@ function NavigatorPanel({
         )}
         <span
           style={{
-            fontSize: 9,
+            fontSize: 12,
             color: "#3A2E12",
             fontFamily: "'Courier New', monospace",
           }}
@@ -1466,7 +1469,7 @@ function NavigatorPanel({
         >
           <span
             style={{
-              fontSize: 9,
+              fontSize: 12,
               letterSpacing: 3,
               color: "#5C4A1E",
               fontFamily: "'Courier New', monospace",
@@ -1500,7 +1503,7 @@ function NavigatorPanel({
                   top: "50%",
                   left: "50%",
                   transform: `rotate(${deg}deg) translateY(-52px) translateX(-50%)`,
-                  fontSize: 9,
+                  fontSize: 12,
                   color: dir === "N" ? "#CC3333" : "#8B7340",
                   fontFamily: "'Courier New', monospace",
                   fontWeight: "bold",
@@ -1579,7 +1582,7 @@ function NavigatorPanel({
             </span>
             <span
               style={{
-                fontSize: 11,
+                fontSize: 14,
                 color: "#5C4A1E",
                 fontFamily: "'Courier New', monospace",
               }}
@@ -1600,7 +1603,7 @@ function NavigatorPanel({
           >
             <span
               style={{
-                fontSize: 9,
+                fontSize: 12,
                 letterSpacing: 3,
                 color: "#5C4A1E",
                 fontFamily: "'Courier New', monospace",
@@ -1656,13 +1659,13 @@ function NavigatorPanel({
           <div style={{ display: "flex", gap: 6 }}>
             <button
               onClick={() => onSails("down")}
-              style={{ ...btnStyle, flex: 1, fontSize: 9 }}
+              style={{ ...btnStyle, flex: 1, fontSize: 12 }}
             >
               ▼ LOWER [↓]
             </button>
             <button
               onClick={() => onSails("up")}
-              style={{ ...btnStyle, flex: 1, fontSize: 9 }}
+              style={{ ...btnStyle, flex: 1, fontSize: 12 }}
             >
               ▲ RAISE [↑]
             </button>
@@ -1681,7 +1684,7 @@ function NavigatorPanel({
           >
             <span
               style={{
-                fontSize: 9,
+                fontSize: 12,
                 letterSpacing: 3,
                 color: "#5C4A1E",
                 fontFamily: "'Courier New', monospace",
@@ -1709,7 +1712,7 @@ function NavigatorPanel({
             </div>
             <span
               style={{
-                fontSize: 9,
+                fontSize: 12,
                 color: "#8B7340",
                 fontFamily: "'Courier New', monospace",
                 textAlign: "center",
@@ -1729,7 +1732,7 @@ function NavigatorPanel({
           >
             <span
               style={{
-                fontSize: 9,
+                fontSize: 12,
                 letterSpacing: 3,
                 color: "#5C4A1E",
                 fontFamily: "'Courier New', monospace",
@@ -1774,7 +1777,7 @@ function NavigatorPanel({
             </div>
             <span
               style={{
-                fontSize: 9,
+                fontSize: 12,
                 color: "#4A7FBB",
                 fontFamily: "'Courier New', monospace",
               }}
@@ -1788,7 +1791,7 @@ function NavigatorPanel({
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           <span
             style={{
-              fontSize: 9,
+              fontSize: 12,
               letterSpacing: 3,
               color: "#5C4A1E",
               fontFamily: "'Courier New', monospace",
@@ -1799,13 +1802,13 @@ function NavigatorPanel({
           <div style={{ display: "flex", gap: 6 }}>
             <button
               onClick={() => onSteer("left")}
-              style={{ ...btnStyle, flex: 1, fontSize: 9 }}
+              style={{ ...btnStyle, flex: 1, fontSize: 12 }}
             >
               ◀ PORT [←]
             </button>
             <button
               onClick={() => onSteer("right")}
-              style={{ ...btnStyle, flex: 1, fontSize: 9 }}
+              style={{ ...btnStyle, flex: 1, fontSize: 12 }}
             >
               STBD [→] ▶
             </button>
@@ -1824,13 +1827,24 @@ function NavigatorPanel({
           >
             <span
               style={{
-                fontSize: 9,
+                fontSize: 12,
                 letterSpacing: 3,
                 color: "#5C4A1E",
                 fontFamily: "'Courier New', monospace",
               }}
             >
               HULL
+            </span>
+            <span
+              style={{
+                fontSize: 11,
+                letterSpacing: 1,
+                color: "#8A6C2A",
+                fontFamily: "'Courier New', monospace",
+                lineHeight: 1.4,
+              }}
+            >
+              3 lives total across Stages 1-6
             </span>
             <div style={{ display: "flex", gap: 5 }}>
               {[1, 2, 3].map((i) => (
@@ -1845,7 +1859,7 @@ function NavigatorPanel({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    fontSize: 11,
+                    fontSize: 14,
                     transition: "background 0.3s",
                     boxShadow:
                       ship.hullHP >= i ? "0 0 5px rgba(139,32,32,0.5)" : "none",
@@ -1866,7 +1880,7 @@ function NavigatorPanel({
           >
             <span
               style={{
-                fontSize: 9,
+                fontSize: 12,
                 letterSpacing: 3,
                 color: "#5C4A1E",
                 fontFamily: "'Courier New', monospace",
@@ -1878,7 +1892,7 @@ function NavigatorPanel({
               onClick={() => onAnchor()}
               style={{
                 ...btnStyle,
-                fontSize: 9,
+                fontSize: 12,
                 background: ship.anchor ? "rgba(212,164,32,0.15)" : "#0D0904",
                 borderColor: ship.anchor ? "#D4A420" : "#3A2E12",
                 color: ship.anchor ? "#D4A420" : "#5C4A1E",
@@ -1900,7 +1914,7 @@ function NavigatorPanel({
         >
           <span
             style={{
-              fontSize: 9,
+              fontSize: 12,
               letterSpacing: 2,
               color: "#2A2010",
               fontFamily: "'Courier New', monospace",
@@ -1910,7 +1924,7 @@ function NavigatorPanel({
           </span>
           <span
             style={{
-              fontSize: 9,
+              fontSize: 12,
               color: "#3A2E12",
               fontFamily: "'Courier New', monospace",
             }}
@@ -1934,7 +1948,7 @@ function NavigatorPanel({
       >
         <span
           style={{
-            fontSize: 8,
+            fontSize: 11,
             letterSpacing: 2,
             color: "#2A2010",
             fontFamily: "'Courier New', monospace",
@@ -2007,7 +2021,7 @@ function StageCompleteCard({ stage, onNext, isLastStage }) {
       <div style={{ textAlign: "center" }}>
         <div
           style={{
-            fontSize: 13,
+            fontSize: 16,
             letterSpacing: 5,
             color: "#D0D8E8",
             marginBottom: 14,
@@ -2112,7 +2126,7 @@ function GameOverScreen({ stage, onRetry }) {
       <div style={{ textAlign: "center" }}>
         <div
           style={{
-            fontSize: 13,
+            fontSize: 16,
             letterSpacing: 5,
             color: "#FFC4C4",
             marginBottom: 14,
@@ -2161,7 +2175,7 @@ function GameOverScreen({ stage, onRetry }) {
           e.target.style.background = "transparent";
         }}
       >
-        TRY THIS STAGE AGAIN
+        RESTART FROM STAGE 1
       </button>
     </div>
   );
@@ -2286,16 +2300,16 @@ function IntroScreen({ onStart }) {
               gap: 5,
             }}
           >
-            <div style={{ fontSize: 12, letterSpacing: 4, color: "#F2CF81" }}>
+            <div style={{ fontSize: 15, letterSpacing: 4, color: "#F2CF81" }}>
               {role}
             </div>
-            <div style={{ fontSize: 13, color: "#DCE3F2" }}>
+            <div style={{ fontSize: 16, color: "#DCE3F2" }}>
               {side} of screen
             </div>
-            <div style={{ fontSize: 13, color: "#EFF2FA", lineHeight: 1.5 }}>
+            <div style={{ fontSize: 16, color: "#EFF2FA", lineHeight: 1.5 }}>
               {desc}
             </div>
-            <div style={{ fontSize: 12, color: "#F2CF81", marginTop: 4 }}>
+            <div style={{ fontSize: 15, color: "#F2CF81", marginTop: 4 }}>
               {keys}
             </div>
           </div>
@@ -2324,7 +2338,7 @@ function IntroScreen({ onStart }) {
       >
         BEGIN VOYAGE
       </button>
-      <div style={{ fontSize: 9, color: "#2A2010", letterSpacing: 2 }}>
+      <div style={{ fontSize: 12, color: "#2A2010", letterSpacing: 2 }}>
         PHASE 5 — POLISH & ATMOSPHERE
       </div>
     </div>
@@ -2359,7 +2373,7 @@ function PostStage6Preview({ onContinue }) {
       <div style={{ textAlign: "center", maxWidth: 780 }}>
         <div
           style={{
-            fontSize: 13,
+            fontSize: 16,
             letterSpacing: 4,
             color: "#D0D8E8",
             marginBottom: 14,
@@ -2429,7 +2443,7 @@ function AdminStageJump({ onJump }) {
           border: "1px solid #8AA6D8",
           color: "#D7E5FF",
           fontFamily: "'Courier New', monospace",
-          fontSize: 11,
+          fontSize: 14,
           letterSpacing: 2,
           padding: "8px 12px",
           cursor: "pointer",
@@ -2463,7 +2477,7 @@ function AdminStageJump({ onJump }) {
                 border: "1px solid #5C74A8",
                 color: "#EFF5FF",
                 fontFamily: "'Courier New', monospace",
-                fontSize: 11,
+                fontSize: 14,
                 letterSpacing: 1,
                 padding: "8px 6px",
                 cursor: "pointer",
@@ -2575,7 +2589,7 @@ export default function BlindCaptainGame() {
   // ── Begin stage ────────────────────────────────────────────────────────────
   const beginStage = useCallback(() => {
     const s = STAGES[stageIdx];
-    setShip(makeShip(s));
+    setShip((prev) => makeShip(s, prev.hullHP));
     setCaptorPos({ x: 1, y: 1 });
     setMapData(buildMap(s.id));
     setCaptainBlackout(false);
@@ -2806,11 +2820,19 @@ export default function BlindCaptainGame() {
 
   const retryStage = useCallback(() => {
     clearInterval(memTimer.current);
+    clearTimeout(pingTimer.current);
+    clearTimeout(damageTimer.current);
     clearTimeout(trustWindowTimer.current);
+    setStageIdx(0);
+    setShip(makeShip(STAGES[0], 3));
+    setCaptorPos({ x: 1, y: 1 });
+    setMapData(buildMap(1));
+    setMemoryCountdown(10);
     setCaptainTrusts(false);
     setNavigatorTrusts(false);
+    setVaultMerging(false);
     setCaptainBlackout(false);
-    setScreen("stageIntro");
+    setScreen("intro");
   }, []);
 
   const goBackStage = useCallback(() => {
@@ -2934,7 +2956,7 @@ export default function BlindCaptainGame() {
               <div style={{ textAlign: "center" }}>
                 <div
                   style={{
-                    fontSize: 9,
+                    fontSize: 12,
                     letterSpacing: 5,
                     color: "#3A2E12",
                     marginBottom: 12,
@@ -2961,7 +2983,7 @@ export default function BlindCaptainGame() {
                 </div>
                 <div
                   style={{
-                    fontSize: 10,
+                    fontSize: 13,
                     color: "#3A2E12",
                     letterSpacing: 1,
                     lineHeight: 1.7,
@@ -2984,7 +3006,7 @@ export default function BlindCaptainGame() {
                   border: `2px solid ${captainTrusts ? "#D4A420" : "#5C4A1E"}`,
                   color: captainTrusts ? "#D4A420" : "#5C4A1E",
                   fontFamily: "'Courier New', monospace",
-                  fontSize: 11,
+                  fontSize: 14,
                   letterSpacing: 4,
                   cursor: captainTrusts ? "default" : "pointer",
                   transition: "all 0.3s",
@@ -2995,7 +3017,7 @@ export default function BlindCaptainGame() {
               >
                 {captainTrusts ? "✦ TRUST GIVEN" : "[ T ] — I TRUST YOU"}
               </button>
-              <div style={{ fontSize: 9, color: "#2A2010", letterSpacing: 2 }}>
+              <div style={{ fontSize: 12, color: "#2A2010", letterSpacing: 2 }}>
                 PRESS T ON KEYBOARD
               </div>
             </div>
@@ -3052,7 +3074,7 @@ export default function BlindCaptainGame() {
               <div style={{ textAlign: "center" }}>
                 <div
                   style={{
-                    fontSize: 9,
+                    fontSize: 12,
                     letterSpacing: 5,
                     color: "#3A2E12",
                     marginBottom: 12,
@@ -3079,7 +3101,7 @@ export default function BlindCaptainGame() {
                 </div>
                 <div
                   style={{
-                    fontSize: 10,
+                    fontSize: 13,
                     color: "#3A2E12",
                     letterSpacing: 1,
                     lineHeight: 1.7,
@@ -3102,7 +3124,7 @@ export default function BlindCaptainGame() {
                   border: `2px solid ${navigatorTrusts ? "#D4A420" : "#5C4A1E"}`,
                   color: navigatorTrusts ? "#D4A420" : "#5C4A1E",
                   fontFamily: "'Courier New', monospace",
-                  fontSize: 11,
+                  fontSize: 14,
                   letterSpacing: 4,
                   cursor: navigatorTrusts ? "default" : "pointer",
                   transition: "all 0.3s",
@@ -3113,7 +3135,7 @@ export default function BlindCaptainGame() {
               >
                 {navigatorTrusts ? "✦ TRUST GIVEN" : "[ Y ] — I TRUST YOU"}
               </button>
-              <div style={{ fontSize: 9, color: "#2A2010", letterSpacing: 2 }}>
+              <div style={{ fontSize: 12, color: "#2A2010", letterSpacing: 2 }}>
                 PRESS Y ON KEYBOARD
               </div>
             </div>
@@ -3135,7 +3157,7 @@ export default function BlindCaptainGame() {
             >
               <div
                 style={{
-                  fontSize: 9,
+                  fontSize: 12,
                   color: "#3A2E12",
                   letterSpacing: 3,
                   lineHeight: 2,
@@ -3163,7 +3185,7 @@ export default function BlindCaptainGame() {
               >
                 <div
                   style={{
-                    fontSize: 10,
+                    fontSize: 13,
                     color: "#8B7340",
                     letterSpacing: 3,
                     animation: "trustPulse 1.2s ease-in-out infinite",
@@ -3259,7 +3281,7 @@ export default function BlindCaptainGame() {
           >
             <div
               style={{
-                fontSize: 9,
+                fontSize: 12,
                 letterSpacing: 7,
                 color: "#5C4A1E",
                 animation: "staggerFadeIn 0.6s ease-out 0.3s both",
@@ -3298,7 +3320,7 @@ export default function BlindCaptainGame() {
               </div>
               <div
                 style={{
-                  fontSize: 11,
+                  fontSize: 14,
                   color: "#5C4A1E",
                   letterSpacing: 4,
                   marginTop: 6,
@@ -3322,7 +3344,7 @@ export default function BlindCaptainGame() {
             >
               <div
                 style={{
-                  fontSize: 11,
+                  fontSize: 14,
                   color: "#5C4A1E",
                   lineHeight: 2,
                   textAlign: "left",
@@ -3375,7 +3397,7 @@ export default function BlindCaptainGame() {
                     }}
                   />
                   <div
-                    style={{ fontSize: 7, color: "#3A2E12", letterSpacing: 1 }}
+                    style={{ fontSize: 10, color: "#3A2E12", letterSpacing: 1 }}
                   >
                     {s.id}
                   </div>
@@ -3403,7 +3425,7 @@ export default function BlindCaptainGame() {
                   border: "1px solid #5C4A1E",
                   color: "#5C4A1E",
                   fontFamily: "'Courier New', monospace",
-                  fontSize: 10,
+                  fontSize: 13,
                   letterSpacing: 4,
                   cursor: "pointer",
                 }}
@@ -3430,7 +3452,7 @@ export default function BlindCaptainGame() {
                   border: "1px solid #3A2E12",
                   color: "#3A2E12",
                   fontFamily: "'Courier New', monospace",
-                  fontSize: 10,
+                  fontSize: 13,
                   letterSpacing: 4,
                   cursor: "pointer",
                 }}
@@ -3489,7 +3511,7 @@ export default function BlindCaptainGame() {
             border: "2px solid #F2CF81",
             color: "#F2CF81",
             fontFamily: "'Courier New', monospace",
-            fontSize: 12,
+            fontSize: 15,
             letterSpacing: 2,
             padding: "8px 14px",
             cursor: "pointer",
@@ -3511,7 +3533,7 @@ export default function BlindCaptainGame() {
             border: "2px solid #9FE3AA",
             color: "#CFFFF0",
             fontFamily: "'Courier New', monospace",
-            fontSize: 12,
+            fontSize: 15,
             letterSpacing: 2,
             padding: "8px 14px",
             cursor: "pointer",
