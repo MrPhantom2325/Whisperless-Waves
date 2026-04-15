@@ -282,7 +282,7 @@ const STAGES = [
     id: 1,
     name: "Open Waters",
     subtitle: "The horizon is clear. Learn to speak as one.",
-    objective: "Navigate to Isla del Tesoro",
+    objective: "Navigate to Isla del Tesoro — learn to speak as one.",
     fogRadius: null,
     mapBlur: 0,
     controlLag: 0,
@@ -373,8 +373,28 @@ const STAGES = [
 ];
 
 // ─── MAP LAYOUTS ──────────────────────────────────────────────────────────────
+// Per-stage destinations — each chosen to match the stage challenge
+const STAGE_DESTS = {
+  1: [9, 9], // Open Waters: centre-bottom, open sailing to learn coordination
+  2: [4, 6], // Reef Maze: far corner, must thread dense diagonal reef belt
+  3: [6, 7], // Storm: top-right corner, long stormy crossing with control lag
+  4: [6, 9], // Fog Bank: bottom-left — opposite corner, brutal dead-reckoning
+  5: [7, 5], // Siren Rocks: south-centre, flanked by two convincing decoys
+  6: [11, 6], // Blackout: mid-right edge, distinctive but needs chart memory
+};
+
+const STAGE_DEST_NAMES = {
+  1: "Isla del Tesoro",
+  2: "Porto Dorado",
+  3: "Cape Desolacion",
+  4: "Bahia Perdida",
+  5: "Isla del Tesoro",
+  6: "El Faro del Fin",
+};
+
 function buildMap(stageId) {
   const cells = {};
+  const dest = STAGE_DESTS[stageId] || STAGE_DESTS[1];
   const base = {
     reefs: [
       [1, 3],
@@ -385,11 +405,13 @@ function buildMap(stageId) {
       [8, 9],
       [10, 3],
       [11, 6],
+      [10, 1],
     ],
     islands: [
       [3, 8],
-      [9, 2],
+      [9, 3],
       [6, 5],
+      [6, 9],
     ],
     currents: [
       [2, 7],
@@ -397,7 +419,6 @@ function buildMap(stageId) {
       [7, 8],
       [10, 7],
     ],
-    dest: [9, 9],
   };
   const extra = {
     2: {
@@ -468,19 +489,19 @@ function buildMap(stageId) {
   base.currents.forEach(([c, row]) => {
     cells[`${c},${row}`] = "current";
   });
-  cells[`${base.dest[0]},${base.dest[1]}`] = "destination";
+  cells[`${dest[0]},${dest[1]}`] = "destination";
   if (stageId === 5) {
-    cells["3,3"] = "decoy";
-    cells["7,10"] = "decoy";
+    // Decoys flank the real destination at [6,11]
+    cells["3,11"] = "decoy";
+    cells["9,11"] = "decoy";
   }
-  return { cells, dest: base.dest };
+  return { cells, dest };
 }
 
 const LANDMARKS = {
   "3,8": "Skull Rock",
-  "9,2": "Twin Peaks",
+  "9,3": "Twin Peaks",
   "6,5": "The Serpent's Spine",
-  "9,9": "Isla del Tesoro",
 };
 
 function makeShip(stage) {
@@ -1019,7 +1040,8 @@ function CaptainPanel({
           >
             Speak from memory.
             <br />
-            Guide the Navigator to Isla del Tesoro.
+            Guide the Navigator to{" "}
+            {STAGE_DEST_NAMES[stage.id] || "Isla del Tesoro"}.
           </div>
         </div>
       )}
@@ -1142,7 +1164,9 @@ function CaptainPanel({
               const isCur = captorPos.x === col && captorPos.y === row;
               const isPing = pingCell === key;
               const lmName =
-                type === "destination" ? "Isla del Tesoro" : LANDMARKS[key];
+                type === "destination"
+                  ? STAGE_DEST_NAMES[stage.id] || "Isla del Tesoro"
+                  : LANDMARKS[key];
 
               return (
                 <div
@@ -2201,7 +2225,7 @@ function IntroScreen({ onStart }) {
             textShadow: "0 0 40px rgba(200,150,30,0.4)",
           }}
         >
-          WHISPERLESS
+          The Blind Captain
         </h1>
         <h1
           style={{
@@ -2213,7 +2237,7 @@ function IntroScreen({ onStart }) {
             letterSpacing: 2,
           }}
         >
-          WAVES
+          & The Mute Navigator
         </h1>
         <p
           style={{
